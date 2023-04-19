@@ -644,3 +644,134 @@ numero2 = 14;       // ERROR
 
 BUENA PRACTICA (IMPRESCINDIBLE):
 Siempre que pueda usar la palabra val, en lugar de var, debo usarla!!!!!
+
+# Paralelogramo
+                ______________
+               /|         O /
+              / |          / b
+             --------a-----
+    Perimetro 2·a + 2·b
+    Area a · h 
+    Altura  b·sen(O)
+      
+# Constructor de una clase en un lenguaje cualquiera que soporte Orientación a Objetos
+
+Es una función que le indica al programa cómo se pueden crear instancias de esa clase.
+
+> Si defino lo que es un cuadrado... aparte le doy al programa instrucciones de cómo crear un cuadrado.
+> Para crear un cuadrado debes darme su lado... y ese lado se anotará como EL LADO de ESE CUADRADO
+
+---
+
+```py
+class Punto :
+
+  # Constructor: Me permite explciar cómo alguien puede crear un Punto concreto
+  def __init__(self, x, y):
+    self.coordenadaX=x
+    self.coordenadaY=y
+```
+
+```java
+class Punto {
+  double coordenadaX;
+  double coordenadaY;
+  
+  Punto(double x, double y) {       // Constructor
+    this.coordenadaX=x;
+    this.coordenadaY=y;
+  }
+}
+```
+
+```scala
+class Punto (var x:Double, var y: Double){
+}
+```
+
+```java
+class Paralelogramo {
+  double base; // Base está definido como una variable.... en JAVA ... y por ende, cualquiera podría cambiar el valor a posteriori
+  final double lado;    // Lado está definido en este caso como constante... y por ende? nadie podría cambiar ese dato una vez asignado
+  double anguloEnRadianes;
+
+                // v Le anoto tal cual? SI
+                             // v Le anoto tal cual? SI
+                                        // v Le anoto tal cual? NO le guardo... lo uso para calcular OTRO DATO
+                                                          // v Le anoto tal cual?  NO le guardo... lo uso para calcular OTRO DATO
+  Paralelogramo(double base, double lado, double angulo, boolean enGrados) {       // Constructor
+    this.base=base;
+    this.lado=lado;
+    if(enGrados)
+        this.anguloEnRadianes=angulo/180 * Math.PI;
+    else
+      this.anguloEnRadianes=angulo;
+  }
+}
+```
+ ^^^^
+```scala
+class Paralelogramo (var base: Double, val lado: Double, angulo:Double, enGrados:Boolean) {
+  var anguloEnRadianes: Double
+  if(enGrados)
+    this.anguloEnRadianes=angulo/180 * Math.PI;
+  else
+    this.anguloEnRadianes=angulo;
+
+}
+```
+```java
+class Paralelogramo {
+  double base;
+  final double lado;
+  double anguloEnRadianes;
+
+  Paralelogramo(double base, double lado, double angulo, boolean enGrados) {
+    this.base=base;
+    this.lado=lado;
+    if(enGrados)
+      this.anguloEnRadianes=angulo/180 * Math.PI;
+    else
+      this.anguloEnRadianes=angulo;
+
+  }
+}
+```
+
+IVAN DICE : Quiero un cuadrado de 127000cm de lado HE HABLADO !!!!
+ALMUDENA y anota... Mi cuadrado tien 1270m de lado HE ANOTADO !!!!
+
+---
+```scala
+class Paralelogramo (var base: Double, val lado: Double, angulo:Double, enGrados:Boolean) {
+  val anguloEnRadianes: Double = 0
+  if(enGrados)
+    this.anguloEnRadianes=angulo/180 * Math.PI;
+  else
+    this.anguloEnRadianes=angulo;
+  val altura: Double = this.lado * Math.sin(this.anguloEnRadianes)
+  
+  def area(): Double = {
+    this.base * this.altura 
+  }
+
+  def perimetro(): Double = {
+    this.base * 2 + this.lado * 2
+  }
+
+}
+```
+Oye programa... a partir de ahora la gente quiero que pueda crear Paralelogramos.
+Cuando alguien quiera crear un paralelogramo, te debe suministrar una base, un lado, un ángulo, e indicarte si el ángulo está en grados o en radianes.
+El Paralelogramos que vas a crear tendrá:
+- por base la que te hayan dado
+- por lado el que te hayan dado.. eso si: ese lado no podrán cambiarlo en el futuro
+- y un angulo en radianes (que no será actualziable):
+  - Si el angulo te lo han dado en radianes... ese es el valor
+  - Pero, si el angulo te lo dan en grados... lo transformas, según la fórmula que te suministro
+- y una altura, calculada como SU lado por el seno de SU angulo en radianes. ESA ALTURA NO ES MODIFICABLE A FUTURO
+Una vez creado un Paralelogramo, la gente podrá:
+- solicitarte que calcules su área, según la formula que se suministra, a saber:
+  Tomas la base de ESE paralelogramo y SU altura
+                  (this)               (this)                 
+- solicitarte que calcules su perímetro... igualmente.
