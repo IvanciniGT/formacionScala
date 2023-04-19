@@ -1,5 +1,7 @@
 package com.curso
 
+import scala.collection.mutable.ListBuffer
+
 object Figuras {
   def main(argumentos: Array[String]): Unit = {
 
@@ -20,14 +22,14 @@ object Figuras {
 
     var paralelogramo1= new Paralelogramo(10, 5, 45, true)
     println("La base del paralelogramo 1 es: " + paralelogramo1.base)
-    println("La altura del paralelogramo 1 es: " + paralelogramo1.altura)
+//    println("La altura del paralelogramo 1 es: " + paralelogramo1.altura)
     println("La lado del paralelogramo 1 es: " + paralelogramo1.lado)
     println("El anguloEnRadianes del paralelogramo 1 es: " + paralelogramo1.anguloEnRadianes)
     println("El area del paralelogramo 1 es: " + paralelogramo1.area())
     println("El perimetro del paralelogramo 1 es: " + paralelogramo1.perimetro())
     paralelogramo1.base = 20
     println("La base del paralelogramo 1 es: " + paralelogramo1.base)
-    println("La altura del paralelogramo 1 es: " + paralelogramo1.altura)
+//    println("La altura del paralelogramo 1 es: " + paralelogramo1.altura)
     println("La lado del paralelogramo 1 es: " + paralelogramo1.lado)
     println("El anguloEnRadianes del paralelogramo 1 es: " + paralelogramo1.anguloEnRadianes)
     println("El area del paralelogramo 1 es: " + paralelogramo1.area())
@@ -41,11 +43,48 @@ object Figuras {
     println("El área de la circunferencia 1 es " + circunferencia1.area())
     println("El perímetro de la circunferencia 1 es " + circunferencia1.perimetro())
     println("El radio de la circunferencia 1 es " + circunferencia1.radio)
+
+    // var listadoDeFiguras: Array // Tanto array como list son tipos de datos INMUTABLES
+    // var listadoDeFiguras: List
+    // Que una vez creados, no se pueden cambiar.
+    // A mi me gustaría una lista en la que poder ir AÑADIENDO COSAS (FIGURAS)
+
+    var listadoDeFiguras= new ListBuffer[FiguraGeometrica]()
+    listadoDeFiguras += cuadrado1       // Cuadrado
+    listadoDeFiguras += cuadrado2       // Cuadrado
+    listadoDeFiguras += rectangulo1     // Rectangulo
+    listadoDeFiguras += rectangulo2
+    listadoDeFiguras += paralelogramo1
+    listadoDeFiguras += circunferencia1  // Circunferencia
+    imprimirAreas(listadoDeFiguras.toList)
+
+  }
+
+  def imprimirAreas(listado: List[FiguraGeometrica]){
+
+    for (figura <- listado) {
+      println("El area de la figura es " + figura.area())
+      println("El perimetro de la figura es " + figura.perimetro())
+    }
   }
 }
 
+trait FiguraGeometrica{ // Un trait, en java llamado INTERFAZ (en python no existe)
+  // Nos permite definir un nuevo TIPO DE DATOS, del que SOLO CONOZCO las funciones que debe tener
+  // Pero no soy capaz de dar aún el cñódigo de esas funciones. No tengo la información
+  def area():Double
+  def perimetro():Double
+}
+
+trait Poligono extends FiguraGeometrica{ // Un trait, en java llamado INTERFAZ (en python no existe)
+  // Nos permite definir un nuevo TIPO DE DATOS, del que SOLO CONOZCO las funciones que debe tener
+  // Pero no soy capaz de dar aún el cñódigo de esas funciones. No tengo la información
+  var lados:Integer
+}
+
 class Triangulo
-class Circunferencia (var radio:Double) {
+
+class Circunferencia (var radio:Double) extends FiguraGeometrica{
 
   def area(): Double = {
     Math.PI * this.radio * this.radio
@@ -54,14 +93,15 @@ class Circunferencia (var radio:Double) {
   def perimetro(): Double = {
     2 * Math.PI * this.radio
   }
+
 }
 
-class Paralelogramo (var base: Double, val lado: Double, angulo:Double, enGrados:Boolean) {
+class Paralelogramo (var base: Double, val lado: Double, angulo:Double, enGrados:Boolean) extends Poligono{
   val anguloEnRadianes: Double = if(enGrados) angulo/180 * Math.PI else angulo
-  val altura: Double = this.lado * Math.sin(this.anguloEnRadianes)
-
+  //val altura: Double = this.lado * Math.sin(this.anguloEnRadianes)
+  var lados = 4
   def area(): Double = {
-    this.base * this.altura
+    this.base * this.lado * Math.sin(this.anguloEnRadianes)
   }
 
   def perimetro(): Double = {
@@ -71,6 +111,9 @@ class Paralelogramo (var base: Double, val lado: Double, angulo:Double, enGrados
 }
 
 class Rectangulo (base:Double, altura:Double) extends Paralelogramo (base, altura, 90, true){ // Aquí defino el tipo de datos
+  override def area(): Double = {  // Sobreescritura de una función (OVERRIDE)
+    this.base * this.lado
+  }
 }
 
 // Defino lo que es un cuadrado, basándome en el concepto de Rectangulo

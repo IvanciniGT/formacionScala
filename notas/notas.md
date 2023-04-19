@@ -775,3 +775,127 @@ Una vez creado un Paralelogramo, la gente podrá:
   Tomas la base de ESE paralelogramo y SU altura
                   (this)               (this)                 
 - solicitarte que calcules su perímetro... igualmente.
+
+
+Figura Geomética*                              area + perimetro
+                        ^                 ^
+Triangulo    >     Poligono* (3 )(lados)  ^
+                        ^                 ^ 
+                  Paralelogramo (2)  Circunferencia (2)
+                        ^           area + perimetro 
+                   Rectangulo (1)
+                        ^
+                    Cuadrado (1)
+
+* TRAIT: Solo definen contratos que los que quieran PRESUMIR de cumplir con ese contrato deben asegurar 
+                                                                                                                        JAVA
+Cuando usamos extends con NOMBRE DE CLASE detrás, que significa? (1)                                                      extends
+  La clase que estoy definiendo hereda las características de la clase que extiende
+
+Cuando usamos extends en una clase con NOMBRE DE UN TRAIT detrás, que significa? (2)                                      implements
+  La clase debe garantizar que cumple con el contrato (trait) es decir, que ofrece código (implementación) 
+  para los métodos y propiedades definidas en el trit correcpondiente
+
+Cuando usamos extends en un TRAIT con un nombre de TRAIT detrás (3)                                                      extends
+  Extiendo el contrato, para que ahora, cualquier que quiera asegurar que cumple con mi contrato deba garantizar el proporcionar
+  código para los requisitos que yo esté definiendo MAS los que se hayan definido en el contrato que extiendo
+
+ME temo que todos desde que teneis 5-6 años os enseñan en el colegio un segundo lenguaje... cual? LENGUAJE MATEMATICO (lenguaje formal)
+  (3+6)x14
+  f(x,y)
+    FUNCION BIYECTIVA!
+  var(X)
+    VARIANZA
+ME temo que todos desde que teneis 7-8 años os enseñan en el colegio un tercer lenguaje... cual? INGLES 
+
+---
+
+## Ejercicio / Proyecto
+
+Nos gustaría un programa / Librería para poder trabajar con DNIs
+- Validar un texto para ver si es un DNI válido o no
+- Dado un número de DNI, calculame la letra que le toca
+- Formatear un DNI con el patrón (formato) que a mi me interese
+
+Para montar esto en scala. Primera pregunta que me hago? 
+QUE PARADIGMA VOY A USAR? 
+- Imperativo? NO, ya que lo que quiero precisamente es poder disponer de unas funciones REUTILIZABLES
+- Procedural? Es decir, crearme esas funciones? Podría... pero no me va a traer cuentas
+- Orientado a Objetos? IDEEAL !!!!!! para este escenario
+
+Quiero definir mi propio tipo de datos: El tipo DNI
+Qué es un DNI?                                                                      propiedades
+  - Un número entero 
+  - Letra
+Qué debo suministrar para crear un DNI?                                             constructor
+  - El texto original de un DNI que tengo por ahí
+Qué le puedo preguntar, pedir a un DNI? Qué funciones voy a montar en esa clase?    funciones
+  - Eres válido?
+    def valido(): Boolean
+  - errores?
+    def errores(): List[String]
+  - Formateate con este formato
+      def formatear(cerosDelante: Boolean, letra: Boolean, puntos : Boolean, letraEnMayuscula: Boolean, caracterSeparacionDigitoControl: String): String
+-------------------------------------------
+HASTA 8 Numeros y 1 letra
+    TABLA 1 : 2300000T            VALIDO
+    TABLA 2 : 2.300.000T          VALIDO
+    TABLA 3 : 2.300.000-t         VALIDO
+    TABLA 4 : 02300000T           VALIDO
+    TABLA 5 : 2300.000-t          NO VALIDO
+    TABLA 6 : 23.00.000-t         NO VALIDO
+    TABLA 7 : 2.300T              VALIDO
+    TABLA 8 : desconocido
+
+    Eso tiene un formato válido de DNI
+    Es un DNI válido? 
+      Qué es la letra del DNI? Es un mecanismo de comprobación.
+      De los números obtenemos una letra
+        Hay que dividir el número entre 23. Lo que me interesa es el RESTO de la división
+          23.000.001 | 23
+                     -------------
+                   1   1.000.000
+                   ^RESTO y es lo que me interesa (estaría entre 0 y 22)
+              Al tener el nñumeo como resto 1 (cuando se divide entre 23), le corecponde la letra R
+              Cuanta probabilidad hay de que dos números generen la misma letra? 1/23
+              Dicho de ota forma: Tengo más de un 95% de confianza en que el dato es bueno... si el númeor y letra coinciden
+
+  Número: 
+    1 bit = 0 | 1 -> Puedo guardar 2 significados
+    2 bits = 00 01 10 11  = 4 =  2 elevado a 2
+    3 bits = 2^3 = 000 001 010 011 100 101 110 111
+    1 byte  = 8 bits ->  256 valores
+    2 bytes = 65536
+    4 bytes = Más de 4kM de valores diferentes ... me da pa meter los hasta 100M de datos distintos que puede tener un DNI?
+  
+Pero si guardo el DNI como un texto? 
+Cuánto ocupa cada caracter en un sistema informático? DEPENDE del juego de caracteres que use. 
+  UTF-8
+  UTF-16
+  ASCII
+Lo normal es que un caracter básico (letras, números, signos de puntuación) me entran en 1 byte (256 valores)
+Al menos 1 byte por caracter...
+Por lo que el DNI me ocuparía? Al menos 9 bytes
+
+Qué significa eso? Pasar de 4 bytes a 9? Más del doble...
+- de información tengo que transmitir por una red
+- de información tengo que guardar o leer de la RAM
+- de información tengo que guardar o leer de un disco
+- comparar en mi CPU para ver si 2 DNIs son iguales o no
+En definitiva... si trabajo con textos, mi programa irá MUCHO MAS LENTO !!!! EXTRAORDINARIAMENTE MAS LENTO !
+
+claro que ... esas comprobaciones...colocar en RM el computador las hace en micro segundos o incluso ns
+Pero si tengo que hacer la operación 50M de veces?
+CUIDAO
+
+NUNCA JAMAS programo (hago un programa) contra unos datos! Eso no lo hacemos
+PROGRAMO CONTRA UNA ESPECIFICACION !
+
+Option[] es otro tipo de dato que tenemos en SCALA
+
+Un option es como una CAJA... que puede tener algo dentro o no
+Es una forma que usamos al programar de ofrecer información al que piede un dato
+Para hacerle saber si le estamos dando o no el dato
+
+Yo siempre voy a entregar esa CAJA.
+Que podrá estar vacia o rellena... con un dato del tipo que defina (al definir el Option)
