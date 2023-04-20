@@ -4,15 +4,17 @@ import scala.collection.mutable.ListBuffer
 
 // Inversion de dependencias                                              ~ Inyección de dependencias
 object MiPrograma {
-  def main(argumentos:Array[String]): Unit = {
-    var dni1 : DNI = null // TODO... ya veremos de donde saco ese valor ("230000-T")
-    dni1.valido
-    dni1.numero
-    dni1.formatear(false, false, false, false, null)
-    dni1.formatear(true, true, true, true, null)
-    dni1.formatear(true, false, true, false, null)
+    def main(argumentos:Array[String]): Unit = {
+        val dni1 : DNI = new DNICreadoDesdeUnTexto("23.000.000T") // TODO... ya veremos de donde saco ese valor ("230000-T")
+        println(dni1.numero)
+        println(dni1.letra)
+        println(dni1.valido)
+        println(dni1.errores)
+        //dni1.formatear(false, false, false, false, null)
+        //dni1.formatear(true, true, true, true, null)
+        //dni1.formatear(true, false, true, false, null)
 
-  }
+    }
 }
 ////////
 trait DNI {
@@ -34,24 +36,21 @@ class DNICreadoDesdeUnTexto (textoDNI:String) extends DNI {
   // Y con esos datos rellenar las propiedades del DNI
   override val (numero, letra, valido, errores) = validarDNI()
 
-  def validarDNI(): ( Option[Integer], Option[Char], Boolean, Option[List[String]] ) = {
-      var letraDelDni: Char = null
-      var separador: Char = null
+  private def validarDNI(): ( Option[Integer], Option[Char], Boolean, Option[List[String]] ) = {
+      var letraDelDni: String = null
+      var separador: String = null
       var numeroDni: String = ""
-      var valido        = true                      // Doy por supuesto que es válido
-      var listaErrores  = new ListBuffer[String]()  // Doy por supuesto que no hay errores
+      val listaErrores  = new ListBuffer[String]()  // Doy por supuesto que no hay errores
       var usaPuntos = false
 
-      for (caracterActual <- textoDNI.toCharArray.reverse) {
+      for (caracterActual <- textoDNI.toUpperCase.toCharArray.reverse) {
           // Comienzo a procesar esos caracteres
           // El primero de esos caracteres debe ser una letra... LA LETRA de control
           if (letraDelDni == null) { // Esto significa que es el primer caracter
-              letraDelDni =  caracterActual
-              if (letraDelDni.isDigit) {
-                  valido = false
+              letraDelDni =  s"$caracterActual"
+              if (caracterActual.isDigit) {
                   listaErrores += "El DNI no tiene Letra de Control"
-              }else if (!letraDelDni.isLetter) {
-                  valido = false
+              }else if (!caracterActual.isLetter) {
                   listaErrores += "El DNI tiene Letra de Control inválida"
               }
           }else{ // Ya no estoy en el primer caracter
@@ -63,12 +62,10 @@ class DNICreadoDesdeUnTexto (textoDNI:String) extends DNI {
                       numeroDni = s"$caracterActual"
                   }else{
                       if(separador != null){
-                          valido = false
                           listaErrores += "Sólo puede introducir un caracter de separación, o un espacio en blanco o un guión"
                       }else{
-                          separador = caracterActual
-                          if(separador != ' ' && separador != '-') {
-                              valido = false
+                          separador = s"$caracterActual"
+                          if(caracterActual != ' ' && caracterActual != '-') {
                               listaErrores += "El caracter de separación no es VALIDO. Solo se admite un espacio en blanco o un guión"
                           }
                       }
@@ -78,7 +75,6 @@ class DNICreadoDesdeUnTexto (textoDNI:String) extends DNI {
                   if(numeroDni.length == 6 && usaPuntos){       // 12.345.678 ->  345678
                       //    en la octava ( y ojo solo cuando exista un punto en la cuarta
                       if( caracterActual!='.'){
-                          valido = false
                           listaErrores += "Falta el separador de millones"
                       }
                       usaPuntos = false
@@ -92,11 +88,9 @@ class DNICreadoDesdeUnTexto (textoDNI:String) extends DNI {
                       if(numeroDni.length == 3){
                           usaPuntos = true
                       }else{
-                          valido = false
                           listaErrores += "El separador de miles no está en un sitio correcto"
                       }
                   }else{
-                      valido = false
                       listaErrores += "Caracter no válido dentro del número del DNI"
                   }
               }
@@ -104,26 +98,41 @@ class DNICreadoDesdeUnTexto (textoDNI:String) extends DNI {
       }
       // El número no puede tener más de 8 dígitos
       if (numeroDni.length > 8) {
-          valido = false
           listaErrores += "El número no puede ser mayor que el 99.999.999"
       }else if (numeroDni.length <1) {
           // Y no puede tener menos de 1
-          valido = false
           listaErrores += "No se ha introducido un número de DNI"
       }
-      // Y la letra debe ser correcta
-
-      return null
+      // Y la letra debe ser correcta. Este trabajo me lo planteo si por ahora es valido
+      if(listaErrores.isEmpty) {
+          if (letraDelDni != DNIUtils.calcularLetraDNI(numeroDni.toInt)){
+              // Y no puede tener menos de 1
+              listaErrores += "La letra de control del DNI no coincide con el número"
+          }
+      }
+      // Esto es lo que devolmemos
+      (
+          // Option[Integer] -> numero
+          if(numeroDni.nonEmpty) Option(numeroDni.toInt) else None,
+          // Option[Char] -> letra
+          if(numeroDni.nonEmpty)  Option(letraDelDni.charAt(0)) else None,
+          listaErrores.isEmpty,
+          if (listaErrores.isEmpty) None else Option(listaErrores.toList)
+      )
   }
-
   override def formatear(puntos: Boolean,
                          cerosDelante: Boolean,
                          letra: Boolean,
                          letraMayuscula: Boolean,
                          caracterSeparacion: Char): String = {
-    var dniFormateado: String = ""
+    val dniFormateado: String = ""
     // TODO: AQUI HABRA QUE PONER CODIGO QUE FORMATEE UN DNI
     dniFormateado
   }
 
+}
+object DNIUtils { // Clase de la que solo hay una instancia, creada automaticamente por SCALA: SINGLETON
+    def calcularLetraDNI(numero: Integer): String = {
+        "TRWAGMYFPDXBNJZSQVHLCKE".substring(numero % 23,numero % 23+1)
+    }
 }
