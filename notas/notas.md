@@ -891,6 +891,34 @@ CUIDAO
 NUNCA JAMAS programo (hago un programa) contra unos datos! Eso no lo hacemos
 PROGRAMO CONTRA UNA ESPECIFICACION !
 
+## Análisis del DNI
+
+// 12345.678-T         345678            
+letraDelDni  = T
+separador    = '8'
+numeroDni    = ""
+valido       = true
+listaErrores = []
+
+T
+-
+-
+8
+7
+6
+.
+5
+4
+3
+.
+2
+1
+
+
+
+
+----------
+
 Option[] es otro tipo de dato que tenemos en SCALA
 
 Un option es como una CAJA... que puede tener algo dentro o no
