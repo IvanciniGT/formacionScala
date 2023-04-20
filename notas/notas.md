@@ -899,3 +899,74 @@ Para hacerle saber si le estamos dando o no el dato
 
 Yo siempre voy a entregar esa CAJA.
 Que podrá estar vacia o rellena... con un dato del tipo que defina (al definir el Option)
+
+---
+# Uso de OPTION
+
+class Diccionario {
+
+def existe(palabra:String):Boolean = {
+return true
+}
+
+def obtenerSignificados(palabra:String): List[String] = {
+  return List.empty(null)
+}
+// A dia de hoy eso que acabamos de hacer es una MUY MALA PRACTICA.
+// Por qué?
+
+}
+....
+dict1.obtenerSignificados("estringoclestro")
+Quizás la función devolverá una Lista vacia
+Pero... quizás el programador ha optado por devolver un null
+
+A priori, yo no soy el tio que ha desarrollado esa funcion.... no se lo que habrá dentro ese personaje!!!!
+Cómo lo averiguo?
+- Mirar el código es una opción... que me lleva tiempo ... y si acaso puedo verlo... 
+- Mirar la documentación de la función... que me lleva tiempo... y si acabo el buen personaje ha optado por escribir una documentación...
+- Lo pruebo y que sea lo que Dios quiera!... yo que sé
+
+
+
+
+(1) def obtenerSignificados(palabra:String): List[String] = {
+  
+  VVV
+
+(2) def obtenerSignificados(palabra:String): Option[List[String]] = {
+
+
+En 1, no se si me devuelven null o lista vacia
+En 2... lo tengo muy claro:
+- Si paso una palabra que exista recibo:
+   Un Option(una caja) que contendrá una lista con los significados (strings)
+- Si paso una palabra que no exista recibo?
+   Un Option(caja) vacia
+y se que no voy a recibir nunca un null... por qué lo se? 
+- PORQUE HOY EN DIA ESTA PROHIBIDISIMO DEVOLVER NULL DESDE UNA FUNCION
+- NO SE HACE
+- FATAL TIO !!!!!!
+
+---
+# INTERPOLACION DE TEXTOS
+
+var edad = 33
+var nombre= "Menchu"
+
+var saludo = "$nombre tiene $edad años"
+
+Si ejecuto eso:
+              Menchu tiene 33 años
+
+----
+
+# Tipos de datos en scala
+
+HEredado de una gran cagada que tiene JAVA en su sintaxis,
+En scala de forma encubierta tenemos tipos de datos de 2 naturalezas diferentes:
+- Tipos de datos que admiten como valor null
+- Tipos de datos que no admiten como valor null
+
+A una variable de tipo Char, Integer, Double, Boolean 
+no se le puede asignar el valor null
