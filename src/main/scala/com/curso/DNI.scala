@@ -5,14 +5,18 @@ import scala.collection.mutable.ListBuffer
 // Inversion de dependencias                                              ~ Inyección de dependencias
 object MiPrograma {
     def main(argumentos:Array[String]): Unit = {
-        val dni1 : DNI = new DNICreadoDesdeUnTexto("23.000.000T") // TODO... ya veremos de donde saco ese valor ("230000-T")
+        val dni1 : DNI = new DNICreadoDesdeUnTexto("23.000T") // TODO... ya veremos de donde saco ese valor ("230000-T")
         println(dni1.numero)
         println(dni1.letra)
         println(dni1.valido)
         println(dni1.errores)
-        //dni1.formatear(false, false, false, false, null)
-        //dni1.formatear(true, true, true, true, null)
-        //dni1.formatear(true, false, true, false, null)
+        println(dni1.formatear(false, false, false, false, null))
+        println(dni1.formatear(true, true, false, false, null))
+        println(dni1.formatear(false, false, true, false, ""))
+        println(dni1.formatear(true, true, true, false, "."))
+        println(dni1.formatear(true, false, true, true, "-"))
+        println(dni1.formatear())
+        println(dni1.formatear(letraMayuscula = false))
 
     }
 }
@@ -23,11 +27,11 @@ trait DNI {
   val letra:    Option[Char]
   val valido:   Boolean
   val errores:  Option[List[String]]
-  def formatear(puntos: Boolean,
-                cerosDelante: Boolean,
-                letra:Boolean,
-                letraMayuscula: Boolean,
-                caracterSeparacion: Char): String
+  def formatear(puntosMiles: Boolean = false,
+                cerosDelante: Boolean = false,
+                mostrarLetra:Boolean = true,
+                letraMayuscula: Boolean = true,
+                caracterSeparacion: String = ""): Option[String]
 }
 
 class DNICreadoDesdeUnTexto (textoDNI:String) extends DNI {
@@ -120,15 +124,44 @@ class DNICreadoDesdeUnTexto (textoDNI:String) extends DNI {
           if (listaErrores.isEmpty) None else Option(listaErrores.toList)
       )
   }
-  override def formatear(puntos: Boolean,
-                         cerosDelante: Boolean,
-                         letra: Boolean,
-                         letraMayuscula: Boolean,
-                         caracterSeparacion: Char): String = {
-    val dniFormateado: String = ""
-    // TODO: AQUI HABRA QUE PONER CODIGO QUE FORMATEE UN DNI
-    dniFormateado
-  }
+
+    def formatear(puntosMiles: Boolean = false,
+                  cerosDelante: Boolean = false,
+                  mostrarLetra: Boolean = true,
+                  letraMayuscula: Boolean = true,
+                  caracterSeparacion: String = ""): Option[String] = {
+
+    if(!valido) return None
+                                       // Extrae el contenido del Option
+        var parteNumerica = s"${numero.get}"
+        if(cerosDelante) {
+            parteNumerica = s"0000000$parteNumerica"
+            parteNumerica = parteNumerica.substring(parteNumerica.length - 8)
+        }
+        if(puntosMiles && parteNumerica.length > 3){ // pondré puntos de miles
+            if(parteNumerica.length > 6){ // Tambie´n puntos de millones
+                val unidades = parteNumerica.substring(parteNumerica.length - 3)
+                val miles = parteNumerica.substring(parteNumerica.length - 6, parteNumerica.length - 3)
+                val millones = parteNumerica.substring(0, parteNumerica.length - 6)
+                parteNumerica = s"$millones.$miles.$unidades"
+            }else{
+                // Solo los de miles
+                val unidades = parteNumerica.substring(parteNumerica.length-3)
+                val miles = parteNumerica.substring(0,parteNumerica.length-3)
+                parteNumerica = s"$miles.$unidades"
+            }
+
+        }
+        var dniFormateado: String = s"$parteNumerica"
+        if(mostrarLetra) {
+            dniFormateado = s"$dniFormateado$caracterSeparacion${letra.get}"
+            if (letraMayuscula)
+                dniFormateado = dniFormateado.toUpperCase
+            else
+                dniFormateado = dniFormateado.toLowerCase
+        }
+        Option(dniFormateado)
+    }
 
 }
 object DNIUtils { // Clase de la que solo hay una instancia, creada automaticamente por SCALA: SINGLETON
