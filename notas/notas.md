@@ -998,3 +998,83 @@ En scala de forma encubierta tenemos tipos de datos de 2 naturalezas diferentes:
 
 A una variable de tipo Char, Integer, Double, Boolean 
 no se le puede asignar el valor null
+
+---
+
+# QUE ENTENDEMOS POR UNA PRUEBA 
+
+ME COMPRUEBA una CARACTERISTICA DE UN SISTEMA:
+- Al final de la prueba, debo saber si la característica se cumple o no se cumple.
+
+- Una prueba acaba en 3 posibles estados:
+- Superada
+- No superada
+- No se pudo ejecutar, explotó !!!!
+
+En nuestro caso, que característica(s) queremos comprobar? Si mi librería funciona bien !
+
+---
+# Vocabulario en el mundo de las pruebas
+
+- Errores   Son cometidos por seres humanos
+- Defectos  Al cometer un error podemos introducir un DEFECTO en un sistema 
+- Fallos    Ese defecto puede manifestarse como un FALLO cuando pongo el sistema en funcionamiento... o no!
+
+# Para que sirven las pruebas? 
+
+Y no hablo solo de software...
+
+- Me permite asegurar que un requisito se cumple de un sistema
+- Detectar fallos, para lo cual pondré en funcionamiento el sistema... 
+  y veo si se comporta de manera adecuada de acuerdo al requisito
+  Tras identificar un fallo, se procede a identificar el defecto que lo ocasiona... DEPURACION / DEBUGGING
+- Analizar los errores que se cometen. Análisis de causas raices!
+- Conocer el estado del proyecto
+
+# Clasificación de las pruebas
+
+## En base al nivel del objeto de prueba
+
+- Pruebas unitarias               Se centran en un COMPONENTE AISLADO del sistema
+- Pruebas de integración          Se centran en la COMUNICACION entre componentes (a lo mejor solo 2)
+- Pruebas de sistema(end2end)     Se centran en el COMPORTAMIENTO del sistema en su conjunto 
+  - Pruebas aceptación            Suelen ser un subconjunto de las de sistema... SON LAS QUE ME PIDEN !
+
+# Objetos de prueba
+
+- Pruebas estáticas               No requieren poner el sistema en funcionamiento:
+    - Calidad de código
+    - Calidad de datos
+- Pruebas dinámicas               SI REQUIEREN poner el sistema en FUNCIONAMIENTO
+  - Pruebas funcionales           Se centran en la funcionalidad
+  - Pruebas no funcionales        Se centran en otros aspectos
+    - Pruebas de rendimiento
+    - Prueba de estres
+    - Pruebas de carga
+    - UX
+    - Backup
+    - HA
+
+##
+
+A día de hoy el uso de la metodologías ágiles nos ha dado algunos dolores de cabeza... que no teníamos antes!
+Hoy en día, entrego en producción cada 2 semanas, 3 semanas como mucho.
+Entrega en producción = HACER MONTONES DE PRUEBAS !
+Entregar el producto de forma incremental.
+
+Día 15 del proyecto :
+  5% de la funcionalidad => Pruebas   5%
+
+Día 30 del proyecto :
+  +5% de la funcionalidad =>          5% nuevo + 5% anterior
+
+Día 45 del proyecto :
+ +10% de la funcionalidad
+
+Día 60 del proyecto :
+  +4% de la funcionalidad
+
+Las metodologías ágiles DISPARAN el número de pruebas!!!!
+Y no hay pasta !!!!
+
+ESTO SOLO TIENE UNA SOLUCION: AUTOMATIZAR  ! 

@@ -1,6 +1,6 @@
 package com.curso.dni
 
-class DNICreadoDesdeUnNumero (numeroSuministrado:Integer) extends DNIAbstracto {
+private class DNICreadoDesdeUnNumero (numeroSuministrado:Integer) extends DNIAbstracto {
 
     override val (numero, letra, valido, errores) = validarDNI()
 

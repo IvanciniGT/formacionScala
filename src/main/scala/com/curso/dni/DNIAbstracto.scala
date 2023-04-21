@@ -1,6 +1,6 @@
 package com.curso.dni
 
-abstract class DNIAbstracto extends DNI {
+private abstract class DNIAbstracto extends DNI {
 
     def formatear(puntosMiles: Boolean = false,
                   cerosDelante: Boolean = false,

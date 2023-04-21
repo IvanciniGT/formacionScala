@@ -2,7 +2,7 @@ package com.curso.dni
 
 import scala.collection.mutable.ListBuffer
 
-class DNICreadoDesdeUnTexto (textoDNI:String) extends DNIAbstracto {
+private class DNICreadoDesdeUnTexto (textoDNI:String) extends DNIAbstracto {
 
     // Llamar a la función validarDNI....
     // Y con esos datos rellenar las propiedades del DNI
