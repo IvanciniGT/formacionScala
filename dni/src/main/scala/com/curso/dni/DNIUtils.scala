@@ -6,7 +6,7 @@ object DNIUtils { // Clase de la que solo hay una instancia, creada automaticame
         "TRWAGMYFPDXBNJZSQVHLCKE".substring(numero % 23,numero % 23+1)
     }
 
-    def dni(numero: Integer): DNI = {
+    def dni(numero: Integer): DNI = { // SOBRECARGA DE UNA FUNCION !
         new DNICreadoDesdeUnNumero(numero)
     }
 
